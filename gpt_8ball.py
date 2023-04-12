@@ -15,7 +15,7 @@ def call_gpt4_api(prompt):
         return "Oops, there was an error processing your request. Please try again."
 
 def main():
-    print("Welcome to GPT-8Ball!")
+    print("Welcome to GPT-8Ball! Press Ctrl+C to exit.")
     while True:
         try:
             user_input = input(">> ")
