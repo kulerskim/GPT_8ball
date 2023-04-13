@@ -7,14 +7,16 @@ load_dotenv()
 class GPT8Ball:
     def __init__(self, api_key):
         self.api_key = api_key
-        openai.api_key = self.api_key
+        self.model = "gpt-3.5-turbo"
+        self.openai = openai
+        self.openai.api_key = self.api_key
 
     def call_chat_completion(self, prompt):
         try:
-            result = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": prompt}])
+            result = self.openai.ChatCompletion.create(model=self.model, messages=[{"role": "user", "content": prompt}])
             message = result["choices"][0]["message"]
             return message["content"]
-        except openai.error.OpenAIError:
+        except self.openai.error.OpenAIError:
             return "Oops, there was an error processing your request. Please try again."
 
     def run(self):
