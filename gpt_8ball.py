@@ -7,8 +7,8 @@ from conversation_history import ConversationHistory
 load_dotenv()
 
 class GPT8Ball:
-    def __init__(self, api_key):
-        self.api_key = api_key
+    def __init__(self):
+        self.api_key = os.environ["GPT_8BALL_API_KEY"]
         self.model = "gpt-3.5-turbo"
         self.conversation_history = ConversationHistory()
         self.openai = openai
@@ -34,8 +34,3 @@ class GPT8Ball:
                 break
             response = self.call_chat_completion(user_input)
             print("GPT-8Ball: ", response)
-
-if __name__ == "__main__":
-    api_key = os.environ["GPT_8BALL_API_KEY"]
-    gpt_ball = GPT8Ball(api_key)
-    gpt_ball.run()
