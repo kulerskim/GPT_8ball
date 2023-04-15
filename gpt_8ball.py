@@ -3,6 +3,7 @@ import openai
 from dotenv import load_dotenv
 
 from conversation_history import ConversationHistory
+from text_to_speach import TextToSpeach
 
 load_dotenv()
 
@@ -11,6 +12,7 @@ class GPT8Ball:
         self.api_key = os.environ["GPT_8BALL_API_KEY"]
         self.model = "gpt-3.5-turbo"
         self.conversation_history = ConversationHistory()
+        self.tts = TextToSpeach()
         self.openai = openai
         self.openai.api_key = self.api_key
 
@@ -34,3 +36,4 @@ class GPT8Ball:
                 break
             response = self.call_chat_completion(user_input)
             print("GPT-8Ball: ", response)
+            self.tts.speak(response)
