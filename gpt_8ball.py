@@ -3,7 +3,10 @@ import openai
 from dotenv import load_dotenv
 
 from conversation_history import ConversationHistory
-from text_to_speach import TextToSpeach
+from polly_text_to_speech import PollyTextToSpeech
+
+from config import LANGUAGE
+from config import PROMPT
 
 load_dotenv()
 
@@ -12,7 +15,7 @@ class GPT8Ball:
         self.api_key = os.environ["GPT_8BALL_API_KEY"]
         self.model = "gpt-3.5-turbo"
         self.conversation_history = ConversationHistory()
-        self.tts = TextToSpeach()
+        self.tts = PollyTextToSpeech(language = LANGUAGE)
         self.openai = openai
         self.openai.api_key = self.api_key
 
@@ -28,6 +31,9 @@ class GPT8Ball:
 
     def run(self):
         print("Welcome to GPT-8Ball! Press Ctrl+C to exit.")
+        self.conversation_history.add({"role": "system", "content": PROMPT})
+        self.openai.ChatCompletion.create(model=self.model, messages=self.conversation_history.get().copy())
+        
         while True:
             try:
                 user_input = input(">> ")

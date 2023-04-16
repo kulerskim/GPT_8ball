@@ -3,22 +3,27 @@ import os
 import pyaudio
 import io
 
-class TextToSpeach:
-    def __init__(self):
+from config import POLLY_VOICES
+
+class PollyTextToSpeech:
+    def __init__(self, language = 'en-US'):
         self.polly_client = boto3.Session(
             aws_access_key_id=os.environ['AWS_ACCESS_KEY_ID'],
             aws_secret_access_key=os.environ['AWS_SECRET_ACCESS_KEY'],
             region_name=os.environ['AWS_DEFAULT_REGION']
         ).client('polly')
         
+        self.language = language
         self.output =io.BytesIO()
 
     def getStreamBytes(self, text_to_speak):
         response = self.polly_client.synthesize_speech(
                     Engine='neural',
+                    LanguageCode=self.language,
                     Text=text_to_speak,
+                    TextType='ssml',
                     OutputFormat='pcm',
-                    VoiceId='Joanna'
+                    VoiceId=POLLY_VOICES[self.language],
                 )
         stream = response['AudioStream'].read()
         return io.BytesIO(stream)
