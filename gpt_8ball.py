@@ -38,7 +38,7 @@ class GPT8Ball:
             audio = r.listen(source)
 
         try:
-            text = r.recognize_google(audio)
+            text = r.recognize_google(audio, language=LANGUAGE)
             print(f"You said: {text}")
             return text
         except sr.UnknownValueError:
