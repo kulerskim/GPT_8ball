@@ -1,5 +1,6 @@
 import os
 import openai
+import speech_recognition as sr
 from dotenv import load_dotenv
 
 from conversation_history import ConversationHistory
@@ -28,6 +29,21 @@ class GPT8Ball:
             return message["content"]
         except self.openai.error.OpenAIError:
             return "Oops, there was an error processing your request. Please try again."
+        
+
+    def get_audio_input(self):
+        r = sr.Recognizer()
+        with sr.Microphone() as source:
+            print("Listening...")
+            audio = r.listen(source)
+
+        try:
+            text = r.recognize_google(audio)
+            print(f"You said: {text}")
+            return text
+        except sr.UnknownValueError:
+            print("Sorry, could not understand the audio.")
+            return None
 
     def run(self):
         print("Welcome to GPT-8Ball! Press Ctrl+C to exit.")
@@ -36,10 +52,11 @@ class GPT8Ball:
         
         while True:
             try:
-                user_input = input(">> ")
+                user_input = self.get_audio_input()
+                if user_input is not None:
+                    response = self.call_chat_completion(user_input)
+                    print("GPT-8Ball: ", response)
+                    self.tts.speak(response)
             except KeyboardInterrupt:
                 print("\nGoodbye!")
                 break
-            response = self.call_chat_completion(user_input)
-            print("GPT-8Ball: ", response)
-            self.tts.speak(response)
