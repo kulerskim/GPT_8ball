@@ -1,4 +1,4 @@
-LANGUAGE = 'en-US'
+LANGUAGE = 'pl-PL'
 
 POLLY_VOICES = {
     'en-US': 'Joanna',
